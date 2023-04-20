@@ -1,1 +1,2 @@
 disnake==2.8.1
+youtube_dl==2021.12.17
