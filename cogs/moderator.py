@@ -1,6 +1,7 @@
 
 import disnake
 from disnake.ext import commands
+from disnake import TextInputStyle
 
 blacklist = [697104275280756846]
 for_eventer: bool = True
@@ -29,8 +30,8 @@ class RecruitementModal(disnake.ui.Modal):
         components = [
             disnake.ui.TextInput(label="Ваше имя", placeholder="Введите ваше имя", custom_id="name"),
             disnake.ui.TextInput(label="Был ли у вас опыт в данной сфере?", placeholder="Напишите о вашем опыте, если он есть", custom_id="opt"),
-            disnake.ui.TextInput(label="Расскажите о себе", placeholder="Расскажите о себе", custom_id="history"),
-            disnake.ui.TextInput(label="Ваш возраст", placeholder="Введите ваш возраст", custom_id="age")
+            disnake.ui.TextInput(label="Расскажите о себе", placeholder="Расскажите о себе", custom_id="history", style=TextInputStyle.paragraph),
+            disnake.ui.TextInput(label="Ваш возраст", placeholder="Введите ваш возраст", custom_id="age", max_length=2, style=TextInputStyle.short)
         ]
         if self.arg == "moderator":
             title = "Набор на должность модератора"
