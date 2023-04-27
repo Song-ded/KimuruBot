@@ -28,7 +28,7 @@ class RecruitementModal(disnake.ui.Modal):
         ]
         """
         components = [
-            disnake.ui.TextInput(label="Ваше имя", placeholder="Введите ваше имя", custom_id="name", style=TextInputStyle.single_line),
+            disnake.ui.TextInput(label="Ваше имя", placeholder="Введите ваше имя", custom_id="name", style=TextInputStyle.single_line, max_length=20, min_length=3),
             disnake.ui.TextInput(label="Ваш возраст", placeholder="Введите ваш возраст", custom_id="age", max_length=2, min_length=2, style=TextInputStyle.short),
             disnake.ui.TextInput(label="Был ли у вас опыт в данной сфере?", placeholder="Напишите о вашем опыте, если он есть", custom_id="opt", style=TextInputStyle.paragraph, min_length=1, max_length=300),
             disnake.ui.TextInput(label="Расскажите о себе", placeholder="Расскажите о себе", custom_id="history", style=TextInputStyle.paragraph, min_length=1, max_length=300)
@@ -75,7 +75,7 @@ class RecruitementModal(disnake.ui.Modal):
                 embed.set_thumbnail(url=interaction.author.display_avatar.url)
                 await interaction.response.send_message(embed=embed, ephemeral=True)
                 channel = interaction.guild.get_channel(859554058226237480)
-                embed1 = disnake.Embed(title=f"Заявка на должность **{self.arg}**", description=f'От {interaction.author.mention}')
+                embed1 = disnake.Embed(title=f"Заявка на должность **{self.arg}**", description=f'От {interaction.author.mention}', color=0xFF8000)
                 embed1.add_field(name='Имя', value=name)
                 embed1.add_field(name='Возраст', value=f"{age} лет")
                 embed1.add_field(name='Опыт', value=opt)
