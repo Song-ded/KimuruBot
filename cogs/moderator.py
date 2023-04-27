@@ -28,7 +28,7 @@ class RecruitementModal(disnake.ui.Modal):
         ]
         """
         components = [
-            disnake.ui.TextInput(label="Ваше имя", placeholder="Введите ваше имя", custom_id="name", TextInputStyle.single_line),
+            disnake.ui.TextInput(label="Ваше имя", placeholder="Введите ваше имя", custom_id="name", style=TextInputStyle.single_line),
             disnake.ui.TextInput(label="Ваш возраст", placeholder="Введите ваш возраст", custom_id="age", max_length=2, min_length=2, style=TextInputStyle.short),
             disnake.ui.TextInput(label="Был ли у вас опыт в данной сфере?", placeholder="Напишите о вашем опыте, если он есть", custom_id="opt", style=TextInputStyle.paragraph),
             disnake.ui.TextInput(label="Расскажите о себе", placeholder="Расскажите о себе", custom_id="history", style=TextInputStyle.paragraph)
