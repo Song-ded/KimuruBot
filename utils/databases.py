@@ -35,11 +35,11 @@ class UsersDataBase:
             await cursor.execute(query, (user.id,))
             return await cursor.fetchone()
 
-    async def get_stats(self, number: int):
+    async def get_stats(self, user: disnake.Member):
         async with aiosqlite.connect(self.name2) as db:
             cursor = await db.cursor()
             query = 'SELECT * FROM messages WHERE id = ?'
-            await cursor.execute(query, (number,))
+            await cursor.execute(query, (user.id,))
             return await cursor.fetchone()
 
     async def add_user(self, user: disnake.Member):
