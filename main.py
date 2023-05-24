@@ -1,6 +1,5 @@
 import os
 import logging
-import keep_alive
 
 import disnake
 from disnake.ext import commands
@@ -19,5 +18,5 @@ async def on_ready():
 for file in os.listdir("./cogs"):
     if file.endswith(".py"):
         bot.load_extension(f"cogs.{file[:-3]}")
-keep_alive.keep_alive()
+
 bot.run("ODc2NzkzNzg2NDI3MTI5ODc2.Gaycsg.QWehXXXPlfDxXzAXIMoZSLRnWGfeDpstzyiJ2Y")
