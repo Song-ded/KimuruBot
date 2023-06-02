@@ -1,23 +1,18 @@
 import disnake
 from disnake.ext import commands
 
-
-class Embed(commands.Cog):
+FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'option': '-vn'}
+class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.slash_command()
-    async def embed(self, interaction):
-        embed = disnake.Embed(title="Embed Title", description="Embed Description", color=0x00ff00)
-        embed.add_field(name="Field 1", value="Value 1", inline=False)
-        embed.add_field(name="Field 2", value="Value 2", inline=False)
-        embed.add_field(name="Field 3", value="Value 3", inline=False)
-        embed.set_footer(text="Embed Footer")
-        embed.set_author(name="Embed Author")
-        embed.set_thumbnail(url=self.bot.user.avatar.url)
-        embed.set_image(url=self.bot.user.avatar.url)
-        await interaction.response.send_message(embed=embed)
+    @commands.slash_command(name='играть', description='Включить музыку')
+    async def play(self, interaction, song_name: str):
+
+        source = await disnake.FFmpegOpusAudio.from_probe(f"{song_name}.mp3", executable="C:/Users/Veter/OneDrive/Рабочий стол/bot/cogs/ffmpeg/ffmpeg.exe")
+        disnake.voice_client.play(source)
+        await interaction.user.voice.channel.connect(reconnect=True)
 
 
 def setup(bot):
-    bot.add_cog(Embed(bot))
+    bot.add_cog(Music(bot))

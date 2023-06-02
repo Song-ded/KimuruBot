@@ -102,6 +102,7 @@ class Economy(commands.Cog):
     async def give(self, interaction, member: disnake.Member,
                    amount: float, arg=commands.Param(choices=['деньги', 'премиум'])):
         await self.db.create_table()
+        print(member)
         await self.db.add_user(member)
         if arg == 'деньги':
             int(amount)
@@ -116,8 +117,8 @@ class Economy(commands.Cog):
             embed.set_thumbnail(url=member.display_avatar.url)
         await interaction.response.send_message(embed=embed)
 
-    @commands.slash_command(name='топ', description='Посмотреть топ пользователей')
-    async def top(self, interaction):
+    @commands.slash_command(name='топ_по_валюте', description='Посмотреть топ пользователей по валюте')
+    async def top_money(self, interaction):
         await self.db.create_table()
         top = await self.db.get_top()
         embeds = []

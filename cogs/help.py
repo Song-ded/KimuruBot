@@ -44,7 +44,7 @@ class SelectGames(disnake.ui.Select):
             await interaction.response.send_message(embed=embed, ephemeral=True)
         elif self.values[0] == "Остальное":
             embed = disnake.Embed(title="Помощь по Остальное")
-            embed.description = "`/заявка` - Подать заявку на должность\n" \
+            embed.description = "`/recruit` - Подать заявку на должность\n" \
             "`/avatar` - Получить аватар пользователя"
             await interaction.response.send_message(embed=embed, ephemeral=True)
 class GameRoles(commands.Cog):

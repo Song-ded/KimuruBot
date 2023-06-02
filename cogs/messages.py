@@ -3,10 +3,77 @@ from disnake.ext import commands
 
 from datetime import datetime
 from utils.databases import UsersDataBase
+
+
+class PaginatorView(disnake.ui.View):
+    def __init__(self, embeds, author, footer: bool, timeout=30.0):
+        self.embeds = embeds
+        self.author = author
+        self.footer = footer
+        self.timeout = timeout
+        self.page = 0
+        super().__init__(timeout=self.timeout)
+
+        if self.footer:
+            for emb in self.embeds:
+                emb.set_footer(text=f'Страница {self.embeds.index(emb) + 1} из {len(self.embeds)}')
+
+    @disnake.ui.button(label='◀️', style=disnake.ButtonStyle.grey)
+    async def back(self, button: disnake.ui.Button, interaction: disnake.Interaction):
+        if self.author.id == interaction.author.id:
+            if self.page == 0:
+                self.page = len(self.embeds) - 1
+            else:
+                self.page -= 1
+        else:
+            return
+
+        await self.button_callback(interaction)
+
+    @disnake.ui.button(label='▶️', style=disnake.ButtonStyle.grey)
+    async def next(self, button: disnake.ui.Button, interaction: disnake.Interaction):
+        if self.author.id == interaction.author.id:
+            if self.page == len(self.embeds) - 1:
+                self.page = 0
+            else:
+                self.page += 1
+        else:
+            return
+
+        await self.button_callback(interaction)
+
+    async def button_callback(self, interaction):
+        if self.author.id == interaction.author.id:
+            await interaction.response.edit_message(embed=self.embeds[self.page])
+        else:
+            return await interaction.response.send_message('Вы не можете использовать эту кнопку!', ephemeral=True)
+
 class Messages(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db = UsersDataBase()
+
+    @commands.slash_command(name='топ_по_сообщениям', description='Посмотреть топ пользователей по сообщениям')
+    async def top_message(self, interaction):
+        await self.db.create_table2()
+        top = await self.db.get_messagestop()
+        embeds = []
+        loop_count = 0
+        n = 0
+        text = ''
+        for user in top:
+            n += 1
+            loop_count += 1
+            text += f'**{n}.** {self.bot.get_user(user[0])} - {user[1]} 💬\n'
+            if loop_count % 10 == 0 or loop_count - 1 == len(top) - 1:
+                embed = disnake.Embed(title='Топ пользователей')
+                embed.description = text
+                embed.set_thumbnail(url=interaction.author.display_avatar.url)
+                embeds.append(embed)
+                text = ''
+        view = PaginatorView(embeds, interaction.author, True)
+        await interaction.response.send_message(embed=embeds[0], view=view)
+
 
     @commands.Cog.listener()
     async def on_message(self, message):
