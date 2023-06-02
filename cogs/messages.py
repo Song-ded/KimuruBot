@@ -122,7 +122,7 @@ class Messages(commands.Cog):
     @commands.slash_command(name='сообщение', description='Написать сообщение от лица бота')
     async def messbot(self, interaction, chan = int, arg= str):
         channel = interaction.guild.get_channel(chan)
-        await interaction.channel.send_message(arg)
+        await interaction.channel.send(arg)
 
 
 def setup(bot):
