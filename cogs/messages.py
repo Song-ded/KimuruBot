@@ -118,5 +118,12 @@ class Messages(commands.Cog):
                 await interaction.response.send_message('Вы успешно получили награду **Долгожитель**!', ephemeral=True)
             else:
                 await interaction.response.send_message('Для получения награды **Долгожитель**, вам требуется пробыть на сервере не покидая его 300 суток!', ephemeral=True)
+
+    @commands.slash_command(name='сообщение', description='Написать сообщение от лица бота')
+    async def messbot(self, interaction, chan = int, arg= str):
+        channel = interaction.guild.get_channel(chan)
+        await interaction.channel.send_message(arg)
+
+
 def setup(bot):
     bot.add_cog(Messages(bot))
