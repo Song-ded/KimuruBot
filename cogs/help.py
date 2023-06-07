@@ -45,6 +45,10 @@ class SelectGames(disnake.ui.Select):
         elif self.values[0] == "Остальное":
             embed = disnake.Embed(title="Помощь по Остальное")
             embed.description = "`/recruit` - Подать заявку на должность\n" \
+            "`/награда` - Получить награду на сервере\n" \
+            "`/сообщения` - Посмотреть кол-во ваших сообщений\n" \
+            "`/stats` - Посмотреть статистику сервера по участникам за последнии 24 часа\n" \
+            "`/топ_по_сообщениям` - Посмотреть топ по сообщениям\n" \
             "`/avatar` - Получить аватар пользователя"
             await interaction.response.send_message(embed=embed, ephemeral=True)
 class GameRoles(commands.Cog):
