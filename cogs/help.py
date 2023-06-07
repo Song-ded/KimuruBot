@@ -18,13 +18,12 @@ class SelectGames(disnake.ui.Select):
             embed = disnake.Embed(title="Помощь по модерации")
             embed.description = "`/ban` - Забанить пользователя\n" \
             "`/clear` - Очистка сообщений\n" \
-            "`/сообщение` - Написать сообщение от лица бота\n" \
             "`/timeout` - Отправить пользователя подумать о своем поведении\n" \
             "`/untimeout` - Отменить пользователю таймаут\n"
             await interaction.response.send_message(embed=embed, ephemeral=True)
         elif self.values[0] == "Экономика":
             embed = disnake.Embed(title="Помощь по экономике")
-            embed.description = "`/топ_по_валюте` - Посмотреть лидербоард\n" \
+            embed.description = "`/топ` - Посмотреть лидербоард\n" \
             "`/обмен` - Обменивать валюты\n" \
             "`/баланс` - Посмотреть свой/чужой баланс\n" \
             "`/выдать` - Выдать валюту пользователю\n"
@@ -46,10 +45,6 @@ class SelectGames(disnake.ui.Select):
         elif self.values[0] == "Остальное":
             embed = disnake.Embed(title="Помощь по Остальное")
             embed.description = "`/recruit` - Подать заявку на должность\n" \
-            "`/stats` - посмотреть статистику сервера за последнии сутки\n" \
-            "`/сообщения` - посмотреть кол-во своих сообщений\n" \
-            "`/топ_по_сообщениям` - посмотреть топ по сообщениям\n" \
-            "`/награда` - получить определенную роль, если подходите по критериям\n" \
             "`/avatar` - Получить аватар пользователя"
             await interaction.response.send_message(embed=embed, ephemeral=True)
 class GameRoles(commands.Cog):
