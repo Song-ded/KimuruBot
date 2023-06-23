@@ -21,13 +21,14 @@ class Welcome_message(commands.Cog):
     async def on_member_join(self, member):
         if member.bot:
             return
-        await self.db.create_table3()
-        await self.db.joined(1)
         channel = member.guild.system_channel
         embed = disnake.Embed(color = 0x2ecc71, title=f"Miko Family", description=f"{member.mention} Приветствуем тебя на сервере!")
         embed.set_footer(text=f"Miko Family", icon_url=member.display_avatar.url)
         embed.set_thumbnail(url=member.display_avatar)
         await channel.send(embed=embed)
+        await self.db.create_table3()
+        await self.db.joined(1)
+
 
     @commands.Cog.listener()
     async def on_member_leave(self, member):
