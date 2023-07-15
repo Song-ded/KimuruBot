@@ -4,6 +4,7 @@ from disnake.ext import commands
 
 blacklist = [697104275280756846]
 for_eventer: bool = True
+for_pr: bool = True
 for_moderator: bool = True
 
 class RecruitementModal(disnake.ui.Modal):
@@ -34,8 +35,10 @@ class RecruitementModal(disnake.ui.Modal):
         ]
         if self.arg == "moderator":
             title = "Набор на должность модератора"
-        else:
+        elif self.arg == "eventsmod":
             title = "Набор на должность ведущего"
+        elif self.arg == "prmanager":
+            title = "Набор на должность пиар менеджера"
         super().__init__(title=title, components=components, custom_id="recruitementModal")
 
     async def callback(self, interaction: disnake.ModalInteraction) -> None:
@@ -60,10 +63,30 @@ class RecruitementModal(disnake.ui.Modal):
                 embed1.add_field(name='Опыт', value=opt)
                 embed1.add_field(name='О нем', value=history)
                 await channel.send(embed=embed1)
-        else:
+        elif self.arg == 'eventsmod':
             if for_eventer == False:
                 await interaction.response.send_message("⛔ Сейчас набор на ведущего закрыт!", ephemeral=True)
             elif for_eventer:
+                name = interaction.text_values["name"]
+                opt = interaction.text_values["opt"]
+                history = interaction.text_values["history"]
+                age = interaction.text_values["age"]
+                embed = disnake.Embed(title="Заявка отправлена!", color = 0x2ecc71)
+                embed.description = f"{interaction.author.mention}, Благодарим вас за **заявку**! " \
+                                    f"Если вы нам **подходите**, администрация **свяжется** с вами в ближайшее время. Ваш лс **обязательно** должен быть открыт!"
+                embed.set_thumbnail(url=interaction.author.display_avatar.url)
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                channel = interaction.guild.get_channel(859554058226237480)
+                embed1 = disnake.Embed(title=f"Заявка на должность **{self.arg}**", description=f'От {interaction.author.mention}')
+                embed1.add_field(name='Имя', value=name)
+                embed1.add_field(name='Возраст', value=f"{age} лет")
+                embed1.add_field(name='Опыт', value=opt)
+                embed1.add_field(name='О нем', value=history)
+                await channel.send(embed=embed1)
+        elif self.arg == "prmanager":
+            if for_pr == False:
+                await interaction.response.send_message("⛔ Сейчас набор на пиар менеджера закрыт!", ephemeral=True)
+            elif for_pr:
                 name = interaction.text_values["name"]
                 opt = interaction.text_values["opt"]
                 history = interaction.text_values["history"]
@@ -87,6 +110,7 @@ class RecruitementSelect(disnake.ui.Select):
         options = [
             disnake.SelectOption(label="Модератор", value="moderator", description="Модератор сервера"),
             disnake.SelectOption(label="Ведущий", value="eventsmod", description="Ведущий мероприятий"),
+            disnake.SelectOption(label="Пиар менеджер", value="prmanager", description="Пиар менеджер"),
         ]
         super().__init__(
             placeholder="Выбери желаемую роль", options=options, min_values=0, max_values=1, custom_id="recruitement"
