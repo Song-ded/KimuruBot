@@ -95,18 +95,18 @@ class UsersDataBase:
             await cursor.execute(query, (messagess, user.id))
             await db.commit()
 
-    async def joined(self, joined: int):
+    async def joined(self):
         async with aiosqlite.connect(self.name3) as db:
             cursor = await db.cursor()
-            query = 'UPDATE stats SET joined = joined + ?'
-            await cursor.execute(query, (joined))
+            query = 'UPDATE stats SET joined = joined + 1'
+            await cursor.execute(query)
             await db.commit()
 
-    async def leaved(self, leaved: int):
+    async def leaved(self):
         async with aiosqlite.connect(self.name3) as db:
             cursor = await db.cursor()
-            query = 'UPDATE stats SET leaved = leaved + ?'
-            await cursor.execute(query, (leaved))
+            query = 'UPDATE stats SET leaved = leaved + 1'
+            await cursor.execute(query)
             await db.commit()
 
     async def clear_server_stats(self):
