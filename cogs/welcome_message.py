@@ -19,15 +19,19 @@ class Welcome_message(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
+        guild = member.guild
         if member.bot:
             return
-        channel = member.guild.system_channel
+        channel = guild.system_channel
         embed = disnake.Embed(color = 0x2ecc71, title=f"Miko Family", description=f"{member.mention} Приветствуем тебя на сервере!")
         embed.set_footer(text=f"Miko Family", icon_url=member.display_avatar.url)
         embed.set_thumbnail(url=member.display_avatar)
         await channel.send(embed=embed)
+        async for entry in guild.audit_logs(limit=100):
+            if entry.action == disnake.AuditLogAction.invite_create:
+                print(f'{entry.user} создал приглашение: {entry.target}')
         await self.db.create_table3()
-        await self.db.joined(1)
+        await self.db.joined()
 
 
     @commands.Cog.listener()
@@ -35,7 +39,7 @@ class Welcome_message(commands.Cog):
         if member.bot:
             return
         await self.db.create_table3()
-        await self.db.leaved(1)
+        await self.db.leaved()
 
     @commands.slash_command()
     async def serverstatstechcommand(self, interaction):
