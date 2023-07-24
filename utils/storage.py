@@ -72,16 +72,11 @@ respect_gifs = [
     "https://cs7.pikabu.ru/post_img/2018/08/13/9/1534169483128115826.jpg",
     "https://cs10.pikabu.ru/post_img/big/2018/08/13/9/1534169515189744448.jpg",
     "https://cs11.pikabu.ru/images/big_size_comm/2018-04_6/1524725925213024969.jpg",
-    "https://s.tcdn.co/6d1/469/6d146963-fb36-33f4-b750-61b93b0b799a/8.png",
     "https://cs10.pikabu.ru/post_img/big/2018/08/13/9/1534169473188366396.jpg",
     "http://pm1.narvii.com/6924/4f7715a9a0c40ba9dea2db4b0a122c38bbf757b8r1-720-471v2_uhq.jpg",
     "https://cs9.pikabu.ru/images/big_size_comm/2018-03_3/1520875066153972517.png",
-    "https://s.tcdn.co/6d1/469/6d146963-fb36-33f4-b750-61b93b0b799a/7.png",
     "https://i.pinimg.com/originals/38/d2/14/38d214c232f7cc550d15bb915a3af406.gif",
-    "https://s.tcdn.co/6d1/469/6d146963-fb36-33f4-b750-61b93b0b799a/5.png",
     "https://nyaa.shikimori.one/system/user_images/original/396559/670495.jpg",
-    "https://desu.shikimori.one/system/user_images/original/59190/563098.jpg",
-    "https://s.tcdn.co/6d1/469/6d146963-fb36-33f4-b750-61b93b0b799a/12.png",
     "https://www.meme-arsenal.com/memes/1081ae939a5ca6565cb42b1f83203e02.jpg",
 ]
 
