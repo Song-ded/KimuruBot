@@ -9,8 +9,8 @@ class Lovepy(commands.Cog):
     @commands.slash_command(name='письмо', description='Написать анонимное письмо человеку [Цена 100]')
     async def anonim(self, interaction, member: disnake.Member, text: str):
         await self.db.create_table()
-        await self.db.add_user(member)
-        user = await self.db.get_user(member)
+        await self.db.add_user(interaction.user)
+        user = await self.db.get_user(interaction.user)
         if 100 <= user[1]:
             embed = disnake.Embed(title="Письмо✉️", description=text, color = 0x2ecc71)
             embed.set_thumbnail(url=member.display_avatar.url)
@@ -19,7 +19,7 @@ class Lovepy(commands.Cog):
                 embed1 = disnake.Embed(title=f'Анонимное письмо - {member}', description="Письмо успешно отправлено!", color = 0x2ecc71)
                 embed1.set_thumbnail(url=member.display_avatar.url)
                 await interaction.response.send_message(embed=embed1, ephemeral=True)
-                await self.db.update_money(member, -100, 0)
+                await self.db.update_money(interaction.user, -100, 0)
             except:
                 await interaction.response.send_message('Все в порядке, но.. У человека видимо закрыто ЛС😢', ephemeral=True)
         else:
