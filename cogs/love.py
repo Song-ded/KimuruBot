@@ -16,6 +16,10 @@ class Lovepy(commands.Cog):
             embed.set_thumbnail(url=member.display_avatar.url)
             try:
                 await member.send(embed=embed)
+                embed1 = disnake.Embed(title=f'Анонимное письмо - {member}', description="Письмо успешно отправлено!", color = 0x2ecc71)
+                embed1.set_thumbnail(url=member.display_avatar.url)
+                await interaction.response.send_message(embed=embed1, ephemeral=True)
+                await self.db.update_money(member, -100, 0)
             except:
                 await interaction.response.send_message('Все в порядке, но.. У человека видимо закрыто ЛС😢', ephemeral=True)
         else:
