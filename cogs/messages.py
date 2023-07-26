@@ -79,13 +79,14 @@ class Messages(commands.Cog):
     async def on_message(self, message):
         print(message.author)
         if message.author.bot != True:
-            print(1)
             await self.db.create_table2()
-            print(2)
+            await self.db.create_table()
+            await self.db.add_user(message.author)
             await self.db.add_ustats(message.author)
-            print(3)
+            res = len(message.content)
+            rest = int(res) * 0.2
+            await self.db.update_money(message.author, int(rest), 0)
             await self.db.update_stats(message.author, 1)
-            print(4)
         else:
             pass
 
@@ -96,18 +97,6 @@ class Messages(commands.Cog):
         user = await self.db.get_stats(interaction.author)
         await interaction.response.send_message(user[1], ephemeral=True)
 
-    @commands.slash_command(name='freelogger', description='Получить ссылку на бота freelogger')
-    async def logger(self, interaction):
-        await self.db.create_table2()
-        await self.db.add_ustats(interaction.author)
-        user = await self.db.get_stats(interaction.author)
-        if user[1] >= 100:
-            await interaction.response.send_message('https://discord.gg/hH6DV3J8d2', ephemeral=True)
-        else:
-            await interaction.response.send_message('Для получения ссылки на freelogger, вам требуется написать на сервере 100 сообщений, или оплатить 20 рублей по этой ссылке указав в нем свой дискорд - https://new.donatepay.ru/@1084821', ephemeral=True)
-
-
-    
     @commands.slash_command(name='награда', description='Получить награду')
     async def award(self, interaction, arg=commands.Param(choices=['Активный', 'Долгожитель'])):
         if arg == 'Активный':
