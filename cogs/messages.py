@@ -77,7 +77,6 @@ class Messages(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        print(message.author)
         if message.author.bot != True:
             await self.db.create_table2()
             await self.db.create_table()
@@ -88,6 +87,41 @@ class Messages(commands.Cog):
             await self.db.update_money(message.author, int(rest), 0)
             await self.db.update_stats(message.author, 1)
         else:
+            pass
+        try:
+            if message.interaction.name == "remaining":
+                if 'Времени до' in message.embeds[0].description:
+                    user = message.interaction.user
+                    await self.db.create_table()
+                    await self.db.add_user(user)
+                    await self.db.update_money(user, 500, 0)
+                    embed = disnake.Embed(title="Спасибо за лайк сервера!", description=f"{user} вы получили 500🪙 за лайк сервера!", color = 0x2ecc71)
+                    await message.channel.send(embed=embed)
+            if message.interaction.name == "up":
+                if 'Успешный Up!' in message.embeds[0].description:
+                    user = message.interaction.user
+                    await self.db.create_table()
+                    await self.db.add_user(user.id)
+                    await self.db.update_money(user.id, 500, 0)
+                    embed = disnake.Embed(title="Спасибо за ап сервера!", description=f"{user} вы получили 500🪙 за ап сервера!", color = 0x2ecc71)
+                    await message.channel.send(embed=embed)
+            elif message.interaction.name == "like":
+                if 'Вы успешно лайкнули сервер.' in message.embeds[0].description:
+                    user = message.interaction.user
+                    await self.db.create_table()
+                    await self.db.add_user(user.id)
+                    await self.db.update_money(user.id, 500, 0)
+                    embed = disnake.Embed(title="Спасибо за лайк сервера!", description=f"{user} вы получили 500🪙 за лайк сервера!", color = 0x2ecc71)
+                    await message.channel.send(embed=embed)
+            elif message.interaction.name == "bump":
+                 if 'Bump done!' in message.embeds[0].description:
+                    user = message.interaction.user
+                    await self.db.create_table()
+                    await self.db.add_user(user.id)
+                    await self.db.update_money(user.id, 250, 0)
+                    embed = disnake.Embed(title="Спасибо за бамп сервера!", description=f"{user} вы получили 250🪙 за бамп сервера!", color = 0x2ecc71)
+                    await message.channel.send(embed=embed)
+        except:
             pass
 
     @commands.slash_command(name='сообщения', description='Узнать сколько вы написали сообщений')
