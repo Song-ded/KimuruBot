@@ -8,10 +8,18 @@ class Lovepy(commands.Cog):
 
     @commands.slash_command(name='письмо', description='Написать анонимное письмо человеку [Цена 100]')
     async def anonim(self, interaction, member: disnake.Member, text: str):
+        print("Anonim message")
         await self.db.create_table()
         await self.db.add_user(interaction.user)
         user = await self.db.get_user(interaction.user)
+        if member == interaction.user:
+            await interaction.response.send_message('Все в порядке, но.. Вы указали самого себя😢', ephemeral=True)
+            break
         if 100 <= user[1]:
+            print(f"member - {member}")
+            print(f"author - {interaction.user}")
+            print(f"text - {text}")
+            print("-----------------")
             embed = disnake.Embed(title="Письмо✉️", description=text, color = 0x2ecc71)
             embed.set_thumbnail(url=member.display_avatar.url)
             try:
