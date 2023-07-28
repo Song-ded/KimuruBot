@@ -89,14 +89,6 @@ class Messages(commands.Cog):
         else:
             pass
         try:
-            if message.interaction.name == "remaining":
-                if 'Времени до' in message.embeds[0].description:
-                    user = message.interaction.user
-                    await self.db.create_table()
-                    await self.db.add_user(user)
-                    await self.db.update_money(user, 500, 0)
-                    embed = disnake.Embed(title="Спасибо за лайк сервера!", description=f"{user} вы получили 500🪙 за лайк сервера!", color = 0x2ecc71)
-                    await message.channel.send(embed=embed)
             if message.interaction.name == "up":
                 if 'Успешный Up!' in message.embeds[0].description:
                     user = message.interaction.user
