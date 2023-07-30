@@ -3,7 +3,6 @@ from disnake.ext import commands
 
 from utils.databases import UsersDataBase
 
-
 class PaginatorView(disnake.ui.View):
     def __init__(self, embeds, author, footer: bool, timeout=30.0):
         self.embeds = embeds
@@ -102,7 +101,6 @@ class Economy(commands.Cog):
     async def give(self, interaction, member: disnake.Member,
                    amount: float, arg=commands.Param(choices=['деньги', 'премиум'])):
         await self.db.create_table()
-        print(member)
         await self.db.add_user(member)
         if arg == 'деньги':
             int(amount)
@@ -116,6 +114,40 @@ class Economy(commands.Cog):
             embed.description = f'{interaction.author.mention} выдал {member.mention} {amount} премиума.'
             embed.set_thumbnail(url=member.display_avatar.url)
         await interaction.response.send_message(embed=embed)
+
+
+    @commands.slash_command(name='дать', description='Передать деньги пользователю')
+    async def give_user(self, interaction, member: disnake.Member,
+                   amount: float, arg=commands.Param(choices=['деньги', 'премиум'])):
+        await self.db.create_table()
+        await self.db.add_user(member)
+        await self.db.add_user(interaction.user)
+        user = await self.db.get_user(interaction.user)
+        if arg == 'деньги':
+            if user[1] <= amount:
+                int(amount)
+                await self.db.update_money(member, amount, 0)
+                await self.db.update_money(interaction.user, -abs(amount), 0)
+                embed = disnake.Embed(title=f'Передача денег пользователю - {member}')
+                embed.description = f'{interaction.author.mention} передал {member.mention} {amount} денег.'
+                embed.set_thumbnail(url=member.display_avatar.url)
+            else:
+                embed = disnake.Embed(title=f'Передача - {member}', description=f"{interaction.user} Операция провалена!", color=0xe74c3c)
+                embed.set_thumbnail(url=member.display_avatar.url)
+                await interaction.response.send_message(embed=embed)
+        else:
+            if user[2] <= amount:
+                await self.db.update_money(member, 0, amount)
+                await self.db.update_money(interaction.user, 0, -abs(amount))
+                embed = disnake.Embed(title=f'Передача денег пользователю - {member}')
+                embed.description = f'{interaction.author.mention} передал {member.mention} {amount} денег.'
+                embed.set_thumbnail(url=member.display_avatar.url)
+            else:
+                embed = disnake.Embed(title=f'Передача - {member}', description=f"{interaction.user} Операция провалена!", color=0xe74c3c)
+                embed.set_thumbnail(url=member.display_avatar.url)
+                await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed)
+
 
     @commands.slash_command(name='топ_по_валюте', description='Посмотреть топ пользователей по валюте')
     async def top_money(self, interaction):
@@ -137,7 +169,6 @@ class Economy(commands.Cog):
                 text = ''
         view = PaginatorView(embeds, interaction.author, True)
         await interaction.response.send_message(embed=embeds[0], view=view)
-
 
 def setup(bot):
     bot.add_cog(Economy(bot))
