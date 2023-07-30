@@ -119,6 +119,8 @@ class Economy(commands.Cog):
     @commands.slash_command(name='дать', description='Передать премиум-деньги пользователю')
     async def give_user(self, interaction, member: disnake.Member,
                    amount: float):
+        if member == interaction.user:
+            await interaction.response.send_message("Вы указали самого себя..")
         await self.db.create_table()
         await self.db.add_user(member)
         await self.db.add_user(interaction.user)
