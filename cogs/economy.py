@@ -116,37 +116,24 @@ class Economy(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
 
-    @commands.slash_command(name='дать', description='Передать деньги пользователю')
+    @commands.slash_command(name='дать', description='Передать премиум-деньги пользователю')
     async def give_user(self, interaction, member: disnake.Member,
-                   amount: float, arg=commands.Param(choices=['деньги', 'премиум'])):
+                   amount: float):
         await self.db.create_table()
         await self.db.add_user(member)
         await self.db.add_user(interaction.user)
         user = await self.db.get_user(interaction.user)
-        if arg == 'деньги':
-            if user[1] <= amount:
-                int(amount)
-                await self.db.update_money(member, amount, 0)
-                await self.db.update_money(interaction.user, -abs(amount), 0)
-                embed = disnake.Embed(title=f'Передача денег пользователю - {member}')
-                embed.description = f'{interaction.author.mention} передал {member.mention} {amount} денег.'
-                embed.set_thumbnail(url=member.display_avatar.url)
-            else:
-                embed = disnake.Embed(title=f'Передача - {member}', description=f"{interaction.user} Операция провалена!", color=0xe74c3c)
-                embed.set_thumbnail(url=member.display_avatar.url)
-                await interaction.response.send_message(embed=embed)
+        if user[2] <= amount:
+            await self.db.update_money(member, 0, amount)
+            await self.db.update_money(interaction.user, 0, -abs(amount))
+            embed = disnake.Embed(title=f'Передача денег пользователю - {member}')
+            embed.description = f'{interaction.author.mention} передал {member.mention} {amount} премиум-денег.'
+            embed.set_thumbnail(url=member.display_avatar.url)
+            await interaction.response.send_message(embed=embed)
         else:
-            if user[2] <= amount:
-                await self.db.update_money(member, 0, amount)
-                await self.db.update_money(interaction.user, 0, -abs(amount))
-                embed = disnake.Embed(title=f'Передача денег пользователю - {member}')
-                embed.description = f'{interaction.author.mention} передал {member.mention} {amount} денег.'
-                embed.set_thumbnail(url=member.display_avatar.url)
-            else:
-                embed = disnake.Embed(title=f'Передача - {member}', description=f"{interaction.user} Операция провалена!", color=0xe74c3c)
-                embed.set_thumbnail(url=member.display_avatar.url)
-                await interaction.response.send_message(embed=embed)
-        await interaction.response.send_message(embed=embed)
+            embed = disnake.Embed(title=f'Передача - {member}', description=f"{interaction.user} Операция провалена!", color=0xe74c3c)
+            embed.set_thumbnail(url=member.display_avatar.url)
+            await interaction.response.send_message(embed=embed)
 
 
     @commands.slash_command(name='топ_по_валюте', description='Посмотреть топ пользователей по валюте')
