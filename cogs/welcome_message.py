@@ -1,6 +1,10 @@
 import disnake
 from disnake.ext import commands, tasks
 
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw 
+
 import asyncio
 import datetime
 from utils.databases import UsersDataBase
@@ -20,8 +24,18 @@ class Welcome_message(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = member.guild
+        font = ImageFont.truetype("arial.ttf", 95)
+        img = Image.open("mikofamily.jpg")
+        draw = ImageDraw.Draw(img)
+        draw.text((10, 450),f"{guild.member_count}",(255,255,255),font=font)
+        img.save('out.jpg')
+        with open('out.jpg', 'rb') as f:
+            banner = f.read()
+        await guild.edit(banner=banner)
         if member.bot:
             return
+        if member.id == "823726493967450132":
+            await guild.ban(member, reason=None)
         channel = guild.system_channel
         embed = disnake.Embed(color = 0x2ecc71, title=f"Miko Family", description=f"{member.mention} Приветствуем тебя на сервере!")
         embed.set_footer(text=f"Miko Family", icon_url=member.display_avatar.url)
