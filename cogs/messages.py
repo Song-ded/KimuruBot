@@ -83,12 +83,25 @@ class Messages(commands.Cog):
             await self.db.add_user(message.author)
             await self.db.add_ustats(message.author)
             res = len(message.content)
-            rest = int(res) * 0.2
+            user = message.author
+            role = disnake.utils.find(lambda r: r.name == '⌊😎⌉│Server Booster', message.guild.roles)
+            if role in user.roles:
+                rest = int(res) * 0.5
+            else:
+                rest = int(res) * 0.2
             await self.db.update_money(message.author, int(rest), 0)
             await self.db.update_stats(message.author, 1)
         else:
             pass
         try:
+            if message.interaction.name == "remaining":
+                if 'Времени до' in message.embeds[0].description:
+                    user = message.interaction.user
+                    await self.db.create_table()
+                    await self.db.add_user(user)
+                    await self.db.update_money(user, 500, 0)
+                    embed = disnake.Embed(title="Спасибо за лайк сервера!", description=f"{user} вы получили 500🪙 за лайк сервера!", color = 0x2ecc71)
+                    await message.channel.send(embed=embed)
             if message.interaction.name == "up":
                 if 'Успешный Up!' in message.embeds[0].description:
                     user = message.interaction.user
