@@ -7,7 +7,7 @@ from disnake.ext import commands
 logging.basicConfig(level=logging.WARNING)
 
 intents = disnake.Intents.all()
-bot = commands.Bot(command_prefix="m.", intents=intents, test_guilds=[777620282574766110])
+bot = commands.Bot(command_prefix="m.", intents=intents)
 bot.remove_command("help")
 
 @bot.event

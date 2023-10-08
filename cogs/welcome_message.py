@@ -1,9 +1,8 @@
 import disnake
 from disnake.ext import commands, tasks
 
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw 
+import numpy as np
+import cv2
 
 import asyncio
 import datetime
@@ -17,21 +16,13 @@ class Welcome_message(commands.Cog):
     @tasks.loop(seconds=1.0)
     async def task(self):
         nowtime1 = str(datetime.datetime.now().time().strftime("%H.%M.%S"))
-        if nowtime1 == "00.00.00":
+        if nowtime1 == "21.00.00":
             await self.db.clear_server_stats()
 
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = member.guild
-        font = ImageFont.truetype("arial.ttf", 95)
-        img = Image.open("mikofamily.jpg")
-        draw = ImageDraw.Draw(img)
-        draw.text((10, 450),f"{guild.member_count}",(255,255,255),font=font)
-        img.save('out.jpg')
-        with open('out.jpg', 'rb') as f:
-            banner = f.read()
-        await guild.edit(banner=banner)
         if member.bot:
             return
         if member.id == "823726493967450132":
@@ -41,9 +32,6 @@ class Welcome_message(commands.Cog):
         embed.set_footer(text=f"Miko Family", icon_url=member.display_avatar.url)
         embed.set_thumbnail(url=member.display_avatar)
         await channel.send(embed=embed)
-        async for entry in guild.audit_logs(limit=100):
-            if entry.action == disnake.AuditLogAction.invite_create:
-                print(f'{entry.user} создал приглашение: {entry.target}')
         await self.db.create_table3()
         await self.db.joined()
 

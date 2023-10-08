@@ -62,102 +62,120 @@ class Messages(commands.Cog):
         n = 0
         text = ''
         for user in top:
-            n += 1
-            loop_count += 1
-            text += f'**{n}.** {self.bot.get_user(user[0])} - {user[1]} 💬\n'
-            if loop_count % 10 == 0 or loop_count - 1 == len(top) - 1:
-                embed = disnake.Embed(title='Топ пользователей')
-                embed.description = text
-                embed.set_thumbnail(url=interaction.author.display_avatar.url)
-                embeds.append(embed)
-                text = ''
-        view = PaginatorView(embeds, interaction.author, True)
+            if self.bot.get_user(user[0]) == None:
+                pass
+            else:
+                n += 1
+                string = f"{self.bot.get_user(user[0])}"
+                string1 = string.replace("#0","")
+                loop_count += 1
+                text += f'**{n}.** {string1} - {user[1]} 💬\n'
+                if n >= 51:
+                    pass
+                else:
+                    if loop_count % 10 == 0 or loop_count - 1 == len(top) - 1:
+                        embed = disnake.Embed(title='Топ пользователей')
+                        embed.description = text
+                        embed.set_thumbnail(url=interaction.author.display_avatar.url)
+                        embeds.append(embed)
+                        text = ''
+                        view = PaginatorView(embeds, interaction.author, True)
         await interaction.response.send_message(embed=embeds[0], view=view)
 
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot != True:
-            await self.db.create_table2()
-            await self.db.create_table()
-            await self.db.add_user(message.author)
-            await self.db.add_ustats(message.author)
-            res = len(message.content)
             user = message.author
-            role = disnake.utils.find(lambda r: r.name == '⌊😎⌉│Server Booster', message.guild.roles)
+            await self.db.create_table()
+            await self.db.add_user(user)
+            res = len(message.content)
+            us = await self.db.get_stats(user)
+            await self.db.create_table2()
+            await self.db.add_ustats(message.author)
+            us = await self.db.get_stats(message.author)
+            if us[1] >= 350:
+                role = message.guild.get_role(1139173666874208296)
+                await message.author.add_roles(role, reason=None)
+            try:
+                role = disnake.utils.find(lambda r: r.name == '⌊😎⌉│Server Booster', message.guild.roles)
+            except:
+                pass
             if role in user.roles:
-                rest = int(res) * 0.5
+                rest = int(res) * 0.1
             else:
-                rest = int(res) * 0.2
-            await self.db.update_money(message.author, int(rest), 0)
-            await self.db.update_stats(message.author, 1)
-        else:
-            pass
+                rest = int(res) * 0.03
+            if message.channel.id == "1134926324000104490":
+                pass
+            else:
+                await self.db.update_money(user, int(rest), 0)
+                await self.db.update_stats(user, 1)
         try:
-            if message.interaction.name == "remaining":
-                if 'Времени до' in message.embeds[0].description:
+            if message.interaction.name == "up":
+                if 'Время' in message.embeds[0].field[0].value:
                     user = message.interaction.user
                     await self.db.create_table()
                     await self.db.add_user(user)
                     await self.db.update_money(user, 500, 0)
-                    embed = disnake.Embed(title="Спасибо за лайк сервера!", description=f"{user} вы получили 500🪙 за лайк сервера!", color = 0x2ecc71)
-                    await message.channel.send(embed=embed)
-            if message.interaction.name == "up":
-                if 'Успешный Up!' in message.embeds[0].description:
-                    user = message.interaction.user
-                    await self.db.create_table()
-                    await self.db.add_user(user.id)
-                    await self.db.update_money(user.id, 500, 0)
                     embed = disnake.Embed(title="Спасибо за ап сервера!", description=f"{user} вы получили 500🪙 за ап сервера!", color = 0x2ecc71)
                     await message.channel.send(embed=embed)
             elif message.interaction.name == "like":
                 if 'Вы успешно лайкнули сервер.' in message.embeds[0].description:
                     user = message.interaction.user
                     await self.db.create_table()
-                    await self.db.add_user(user.id)
-                    await self.db.update_money(user.id, 500, 0)
+                    await self.db.add_user(user)
+                    await self.db.update_money(user, 500, 0)
                     embed = disnake.Embed(title="Спасибо за лайк сервера!", description=f"{user} вы получили 500🪙 за лайк сервера!", color = 0x2ecc71)
                     await message.channel.send(embed=embed)
             elif message.interaction.name == "bump":
                  if 'Bump done!' in message.embeds[0].description:
                     user = message.interaction.user
                     await self.db.create_table()
-                    await self.db.add_user(user.id)
-                    await self.db.update_money(user.id, 250, 0)
+                    await self.db.add_user(user)
+                    await self.db.update_money(user, 250, 0)
                     embed = disnake.Embed(title="Спасибо за бамп сервера!", description=f"{user} вы получили 250🪙 за бамп сервера!", color = 0x2ecc71)
                     await message.channel.send(embed=embed)
         except:
             pass
 
     @commands.slash_command(name='сообщения', description='Узнать сколько вы написали сообщений')
-    async def mess(self, interaction):
+    async def mess(self, interaction, member: disnake.Member):
+        if member is None:
+            member = interaction.author
         await self.db.create_table2()
-        await self.db.add_ustats(interaction.author)
-        user = await self.db.get_stats(interaction.author)
+        await self.db.add_ustats(member)
+        user = await self.db.get_stats(member)
         await interaction.response.send_message(user[1], ephemeral=True)
-
+	
+    @commands.slash_command(name='выдатьсооб', description='Выдать сооб пользователю')
+    async def give123(self, interaction, member: disnake.Member, amount: int):
+        await self.db.create_table2()
+        await self.db.add_ustats(member)
+        await self.db.update_stats(member, amount)
+        await interaction.response.send_message('Готово', ephemeral=True)
+    
     @commands.slash_command(name='награда', description='Получить награду')
     async def award(self, interaction, arg=commands.Param(choices=['Активный', 'Долгожитель'])):
         if arg == 'Активный':
             await self.db.create_table2()
             await self.db.add_ustats(interaction.author)
             user = await self.db.get_stats(interaction.author)
-            if user[1] >= 300:
+            if user[1] >= 1000:
                 role = interaction.guild.get_role(917022395552915476)
                 await interaction.user.add_roles(role, reason=None)
                 await interaction.response.send_message('Вы успешно получили награду **Активный**!', ephemeral=True)
             else:
-                await interaction.response.send_message('Для получения награды **Активный**, вам требуется написать на сервере 300 сообщений!', ephemeral=True)
+                await interaction.response.send_message('Для получения награды **Активный**, вам требуется написать на сервере 1000 сообщений!', ephemeral=True)
         elif arg == 'Долгожитель':
             value0 = datetime.today()
             value1 = interaction.user.joined_at.strftime('%Y-%m-%d %H:%M:%S.%f')
             value2 = datetime.strptime(value1, '%Y-%m-%d %H:%M:%S.%f')
-            if (value0 - value2).days >= 300:
+            if (value0 - value2).days >= 200:
                 role = interaction.guild.get_role(987712822580490250)
                 await interaction.user.add_roles(role, reason=None)
                 await interaction.response.send_message('Вы успешно получили награду **Долгожитель**!', ephemeral=True)
             else:
-                await interaction.response.send_message('Для получения награды **Долгожитель**, вам требуется пробыть на сервере не покидая его 300 суток!', ephemeral=True)
+                await interaction.response.send_message('Для получения награды **Долгожитель**, вам требуется пробыть на сервере не покидая его 200 суток!', ephemeral=True)
 
     @commands.slash_command(name='сообщение', description='Написать сообщение от лица бота')
     async def messbot(self, interaction, chan = int, arg= str):

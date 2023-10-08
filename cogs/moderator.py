@@ -55,7 +55,7 @@ class RecruitementModal(disnake.ui.Modal):
                                     f"Если вы нам **подходите**, администрация **свяжется** с вами в ближайшее время. Ваш лс **обязательно** должен быть открыт!"
                 embed.set_thumbnail(url=interaction.author.display_avatar.url)
                 await interaction.response.send_message(embed=embed, ephemeral=True)
-                channel = interaction.guild.get_channel(859554058226237480)
+                channel = interaction.guild.get_channel(1156536487974817832)
                 embed1 = disnake.Embed(title=f"Заявка на должность **{self.arg}**",
                                        description=f'От {interaction.author.mention}')
                 embed1.add_field(name='Имя', value=name)
@@ -76,7 +76,7 @@ class RecruitementModal(disnake.ui.Modal):
                                     f"Если вы нам **подходите**, администрация **свяжется** с вами в ближайшее время. Ваш лс **обязательно** должен быть открыт!"
                 embed.set_thumbnail(url=interaction.author.display_avatar.url)
                 await interaction.response.send_message(embed=embed, ephemeral=True)
-                channel = interaction.guild.get_channel(859554058226237480)
+                channel = interaction.guild.get_channel(1156536487974817832)
                 embed1 = disnake.Embed(title=f"Заявка на должность **{self.arg}**", description=f'От {interaction.author.mention}')
                 embed1.add_field(name='Имя', value=name)
                 embed1.add_field(name='Возраст', value=f"{age} лет")
@@ -96,7 +96,7 @@ class RecruitementModal(disnake.ui.Modal):
                                     f"Если вы нам **подходите**, администрация **свяжется** с вами в ближайшее время. Ваш лс **обязательно** должен быть открыт!"
                 embed.set_thumbnail(url=interaction.author.display_avatar.url)
                 await interaction.response.send_message(embed=embed, ephemeral=True)
-                channel = interaction.guild.get_channel(859554058226237480)
+                channel = interaction.guild.get_channel(1156536487974817832)
                 embed1 = disnake.Embed(title=f"Заявка на должность **{self.arg}**", description=f'От {interaction.author.mention}')
                 embed1.add_field(name='Имя', value=name)
                 embed1.add_field(name='Возраст', value=f"{age} лет")

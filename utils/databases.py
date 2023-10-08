@@ -7,6 +7,17 @@ class UsersDataBase:
         self.name = 'dbs/users.db'
         self.name2 = 'dbs/messages.db'
         self.name3 = 'dbs/stats.db'
+        self.name4 = 'dbs/curs.db'
+
+    async def create_table4(self):
+        async with aiosqlite.connect(self.name4) as db:
+            cursor = await db.cursor()
+            query = '''CREATE TABLE IF NOT EXISTS curs (
+                ccurs INTEGER,
+                bud INTEGER
+            )'''
+            await cursor.execute(query)
+            await db.commit()
 
     async def create_table(self):
         async with aiosqlite.connect(self.name) as db:
@@ -38,6 +49,7 @@ class UsersDataBase:
             )'''
             await cursor.execute(query)
             await db.commit()
+
     async def get_user(self, user: disnake.Member):
         async with aiosqlite.connect(self.name) as db:
             cursor = await db.cursor()
@@ -45,6 +57,12 @@ class UsersDataBase:
             await cursor.execute(query, (user.id,))
             return await cursor.fetchone()
 
+    async def get_ccurs(self):
+        async with aiosqlite.connect(self.name4) as db:
+            cursor = await db.cursor()
+            query = 'SELECT * FROM curs'
+            await cursor.execute(query)
+            return await cursor.fetchone()
     async def get_stats(self, user: disnake.Member):
         async with aiosqlite.connect(self.name2) as db:
             cursor = await db.cursor()
@@ -80,14 +98,25 @@ class UsersDataBase:
                 query = 'INSERT INTO messages (id, messagess) VALUES (?, ?)'
                 await cursor.execute(query, (user.id, 0))
                 await db.commit()
-
+    async def add_ccurs(self):
+        async with aiosqlite.connect(self.name4) as db:
+            if not await self.get_ccurs():
+                cursor = await db.cursor()
+                query = 'INSERT INTO curs (ccurs, bud) VALUES (?, ?)'
+                await cursor.execute(query, (0, 0))
+                await db.commit()
     async def update_money(self, user: disnake.Member, money: int, premium: float):
         async with aiosqlite.connect(self.name) as db:
             cursor = await db.cursor()
             query = 'UPDATE users SET money = money + ?, premium = premium + ? WHERE id = ?'
             await cursor.execute(query, (money, premium, user.id))
             await db.commit()
-
+    async def update_curs(self, ccurs: int, bud: int):
+        async with aiosqlite.connect(self.name4) as db:
+            cursor = await db.cursor()
+            query = 'UPDATE curs SET ccurs = ccurs + ?, bud = bud + ?'
+            await cursor.execute(query, (ccurs, bud))
+            await db.commit()
     async def update_stats(self, user: disnake.Member, messagess: int):
         async with aiosqlite.connect(self.name2) as db:
             cursor = await db.cursor()
